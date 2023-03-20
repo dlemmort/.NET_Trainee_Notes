@@ -44,15 +44,21 @@ foreach (char letter in woord)
 - In de constructor zetten we de parameters die we nodig hebben om het object aan te maken.
 
 ```C#
+//AUTO KLASSE
 public class Auto
 {
 	public string Kleur;        //field, member, instance variable in C#
 	public string Kenteken;
 	public string Merk;
-	public double Snelheid;
+	public double _snelheid;    //private variabelen beginnen met underscore
+								//kleine letter
 
 	public Auto (string kenteken, string kleur)
-	{                           
+	{      
+		if (kenteken == null)
+		{
+			throw new ArgumentNullException(nameof(kenteken), "Kenteken is verplicht");
+		}                     
 		Kenteken = kenteken;
 		Kleur = kleur;
 		Snelheid = 0.0;         //default waarde schrijven we toch op:
@@ -72,8 +78,10 @@ public class Auto
 		}
 		else
 		{
-			
+			throw new ArgumentOutOfRangeException(nameof(nieuweSnelheid), 
+									"De snelheid moet tussen 0 en 300 liggen");
 		}
+	//Snelheid = Math.Min(0, (Math.Max(nieuweSnelheid, 300)));
 	}
 
 	public void GasGeven()
@@ -128,13 +136,14 @@ public class AutoTest
 		var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(act);
 		          //Doe dus net alsof je het uitvoert om te kijken of er dan
 		          //een exceptie komt
-		Assert.AreEqual("De snelheid moet tussen 0 en 300 liggen", ex.Message);
+		Assert.AreEqual(ex.Message.StartsWith("De snelheid moet tussen 0 en 300 liggen"));
 	}
 	
 }
 ```
 
 ```C#
+//CONSOLE APP
 static void Main(string[] args)
 {
 	Auto auto 1 = new Auto("5-SPT-20", "Blauw");
@@ -157,3 +166,114 @@ Persoon p = new Persoon { Naam = "Daan", Leeftijd = 34};
 - Class Invariant: iets wat altijd waar is voor objecten
 	- Snelheid is altijd tussen de 0 en 300
 	- Kenten of kleur is altijd ingevuld
+
+
+
+### Getter / Setter
+
+```C#
+public class Auto
+{
+	public string Kleur;        //field, member, instance variable in C#
+	public string Kenteken;
+	public string Merk;
+	public double _snelheid;    //private variabelen beginnen met underscore
+								//kleine letter
+
+	public Auto (string kenteken, string kleur)
+	{                           
+		Kenteken = kenteken;
+		Kleur = kleur;
+		Snelheid = 0.0;         //default waarde schrijven we toch op:
+		                        //leesbaarheid, en laten zien dat het bewust is.
+	}
+
+public double Snelheid          // Nu kunnen we auto.Snelheid; aanroepen ip
+{                               // auto.GetSnelheid();
+	get {return _snelheid;}
+	set
+	{
+		if (0 <= value && value <= 300) // LET OP: value hier ipv variabele -
+		{                               // naam
+			_snelheid = value;
+		}
+		else
+		{
+			throw new ArgumentOutOfRangeException(nameof(nieuweSnelheid), 
+									"De snelheid moet tussen 0 en 300 liggen");
+		}
+	}
+}
+```
+
+
+### Korte Getter / Setter
+```C#
+public class Auto
+{
+	public string Kleur {get; private set;};        
+	public string Kenteken {get;}
+	public string Merk {get; set;}
+	public double _snelheid;
+
+	....
+}
+```
+
+- Onder water maakt de compiler hier een private variable van met de 2 methodes Get en Set.
+- Kenteken kan nu ook in de klasse (behalve de constructor) niet meer worden gewijzigd, maar wél worden opgevraagd.
+- Kleur kan nu binnen de klasse wel worden gewijzigd, daarbuiten niet. Hij kan daarbuiten wel worden opgevraagd.
+
+
+### Gebruik meerdere constructors
+```C#
+public class Auto
+{
+	public string Kleur;        //field, member, instance variable in C#
+	public string Kenteken;
+	public string Merk;
+	public double _snelheid;    //private variabelen beginnen met underscore
+								//kleine letter
+
+	
+	public Auto (string kenteken) : this(kenteken, "saai grijs")
+	{      
+		/// hier mogelijk
+		/// extra code
+		/// toevoegen
+	}
+
+	//Oplossing 2: default waarde meegeven
+	public Auto (string kenteken, string kleur = "saai grijs")
+	{      
+		if (kenteken == null)
+		{
+			throw new ArgumentNullException(nameof(kenteken), "Kenteken is verplicht");
+		}                     
+		Kenteken = kenteken;
+		Kleur = kleur;
+		Snelheid = 0.0;         //default waarde schrijven we toch op:
+		                        //leesbaarheid, en laten zien dat het bewust is.
+	}
+
+	public void Overspuiten(string Kleur)
+	{
+		this.Kleur = Kleur;     //this.Kleur verwijst naar klasse variabele
+		                        //Kleur verwijst naar methode variabele
+	}
+```
+
+## Opdracht 
+
+Object regel maken met:
+- aantal
+- naam
+- stuksprijs
+- prijs (totaal)
+
+Object bon maken met:
+- Array met regels (niet zichtbaar)
+- Totaalprijs
+- Methode: `Scan(string naam, decimal stuksprijs)`
+	- als er eenzelfde object wordt gescand wordt er aan de regel 1 toegevoegd
+- Methode: .ToString() print de gehele bon uit.
