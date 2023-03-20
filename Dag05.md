@@ -277,3 +277,26 @@ Object bon maken met:
 - Methode: `Scan(string naam, decimal stuksprijs)`
 	- als er eenzelfde object wordt gescand wordt er aan de regel 1 toegevoegd
 - Methode: .ToString() print de gehele bon uit.
+
+## Static
+- Staat los van een instantie
+- Gebruiken om functies aan te maken zonder specifieke eigenschappen van een bepaalde klasse.
+- Gebruiken om bijvoorbeeld ID aan te maken:
+```C#
+public class Auto
+{
+	public static Long ID = 100;
+	private long _id;
+	
+
+	public Auto()
+	{
+		_id = ID + 1;
+	}
+
+	public static bool HebbenDezelfdeKleur(Auto a, Auto b)
+	{
+		return a.Kleur == b.Kleur;
+	}
+}
+```
