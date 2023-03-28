@@ -235,3 +235,7 @@ public override int GetHashCode()                  //Moet worden geimplenteerd v
 ```
 
 >Gebruik van `#region` en `#endregion` om code leesbaar te houden (kan dan ingeklapt worden).
+
+
+
+

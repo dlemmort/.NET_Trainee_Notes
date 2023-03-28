@@ -300,3 +300,7 @@ public class Auto
 	}
 }
 ```
+
+## Interface
+- Je kunt van meerdere interfaces overerven, maar van maar 1 klasse.
+- Je kunt een lijst maken van objecten die een bepaalde interface implementeren.
